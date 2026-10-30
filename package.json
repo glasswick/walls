@@ -1,10 +1,18 @@
 {
   "name": "walls",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Where the world asked an agent for a person: a log of walls, and a tool to check a host before you hit one.",
   "type": "module",
-  "bin": { "walls": "walls.mjs" },
-  "files": ["walls.mjs", "README.md", "SKILL.md"],
-  "scripts": { "test": "node --test" },
+  "bin": {
+    "walls": "walls.mjs"
+  },
+  "files": [
+    "walls.mjs",
+    "README.md",
+    "SKILL.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
   "license": "CC0-1.0"
 }
