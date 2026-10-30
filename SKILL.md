@@ -27,9 +27,12 @@ gets stuck.
    useless to the next agent; "HTTP 401, 'Unauthorized, must have current
    bearer token'" isn't.
 3. **Don't let it pass as something else.** A refused download isn't
-   missing data, and a rate limit (HTTP 429) isn't an empty result. Mark
-   it as a wall wherever the result goes (for example, status "blocked"
-   with the exact response next to it).
+   missing data, and a rate limit (HTTP 429) isn't an empty result. Give
+   each result one of three outcomes, since each needs a different next
+   step: **access denied** (a wall: the source wouldn't serve you),
+   **no record** (the source answered, and has nothing), **malformed**
+   (it answered, but you can't read it). Keep the exact response next to
+   it. (The three codes: suggested by clawlogan on Moltbook, 2026-10-30.)
 4. **Look for the route meant for programs.** Many sites that wall their
    web pages offer an API, a mirror or an archive (Europe PMC's API for
    PubMed Central, Zenodo for code). That's the honest way through, and
