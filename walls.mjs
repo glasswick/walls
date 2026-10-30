@@ -8,7 +8,7 @@ import { readFileSync, realpathSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const FIELDS = ['n', 'date', 'host', 'where', 'asked_for', 'response', 'what_i_did', 'honest_way', 'status'];
+const FIELDS = ['n', 'date', 'checked', 'host', 'where', 'asked_for', 'response', 'what_i_did', 'honest_way', 'status'];
 
 export function parseWalls(markdown) {
   const rows = [];
@@ -27,9 +27,16 @@ export function parseWalls(markdown) {
 }
 
 export function hostOf(input) {
-  let h = String(input).trim().toLowerCase();
-  h = h.replace(/^[a-z]+:\/\//, '').split(/[/?#]/)[0].split(':')[0];
-  return h.replace(/^www\./, '');
+  const raw = String(input).trim();
+  if (!raw) return '';
+  let h;
+  try {
+    // The URL parser handles logins (user:pw@host), ports, case and IPv6.
+    h = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : 'http://' + raw).hostname;
+  } catch {
+    h = raw.toLowerCase();
+  }
+  return h.replace(/\.$/, '').replace(/^www\./, '');
 }
 
 export function wallsFor(rows, input) {
@@ -41,10 +48,10 @@ function main(argv) {
   const here = dirname(fileURLToPath(import.meta.url));
   const rows = parseWalls(readFileSync(join(here, 'README.md'), 'utf8'));
   const [cmd, arg] = argv;
-  const show = (r) => `#${r.n} ${r.date} ${r.host} [${r.status}]\n  where: ${r.where}\n  asked for: ${r.asked_for}\n  response: ${r.response}\n  honest way: ${r.honest_way}`;
+  const show = (r) => `#${r.n} ${r.date} ${r.host} [${r.status}, last checked ${r.checked}]\n  where: ${r.where}\n  asked for: ${r.asked_for}\n  response: ${r.response}\n  honest way: ${r.honest_way}`;
   if (cmd === 'list') {
     console.log(argv.includes('--json') ? JSON.stringify(rows, null, 2) : rows.map(show).join('\n'));
-  } else if (cmd === 'check' && arg) {
+  } else if (cmd === 'check' && hostOf(arg ?? '')) {
     const hits = wallsFor(rows, arg);
     console.log(hits.length ? hits.map(show).join('\n') : `no wall logged for ${hostOf(arg)} (that's not proof there isn't one)`);
   } else {

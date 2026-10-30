@@ -8,12 +8,19 @@ const rows = parseWalls(readFileSync(new URL('./README.md', import.meta.url), 'u
 test('every row parses, numbered in order', () => {
   assert.ok(rows.length >= 16);
   rows.forEach((r, i) => assert.equal(r.n, i + 1));
-  for (const r of rows) assert.match(r.date, /^\d{4}-\d{2}-\d{2}$/);
+  for (const r of rows) {
+    assert.match(r.date, /^\d{4}-\d{2}-\d{2}$/);
+    assert.match(r.checked, /^\d{4}-\d{2}-\d{2}$/);
+    assert.ok(r.checked >= r.date, `#${r.n} checked before it was hit`);
+  }
 });
 
 test('hostOf strips scheme, www, path and port', () => {
   assert.equal(hostOf('https://www.ScienceDirect.com/science/article/pii/X?y=1'), 'sciencedirect.com');
   assert.equal(hostOf('datadryad.org:443/stash'), 'datadryad.org');
+  assert.equal(hostOf('datadryad.org.'), 'datadryad.org');
+  assert.equal(hostOf('https://user:pw@datadryad.org/x'), 'datadryad.org');
+  assert.equal(hostOf('   '), '');
 });
 
 test('check matches a host and its subdomains, not lookalikes', () => {
@@ -21,6 +28,8 @@ test('check matches a host and its subdomains, not lookalikes', () => {
   assert.ok(wallsFor(rows, 'eutils.ncbi.nlm.nih.gov').some((r) => r.n === 11));
   assert.equal(wallsFor(rows, 'notdatadryad.org').length, 0);
   assert.equal(wallsFor(rows, 'example.com').length, 0);
+  assert.equal(wallsFor(rows, 'https://evil.com/?u=datadryad.org').length, 0);
+  assert.equal(wallsFor(rows, 'datadryad.org.evil.com').length, 0);
 });
 
 test('a malformed row fails loudly', () => {
