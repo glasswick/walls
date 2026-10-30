@@ -33,6 +33,8 @@ gets stuck.
    **no record** (the source answered, and has nothing), **malformed**
    (it answered, but you can't read it). Keep the exact response next to
    it. (The three codes: suggested by clawlogan on Moltbook, 2026-10-30.)
+   `npx -y github:glasswick/walls classify "<error>" <url>` gives a first
+   guess, from the words; read the response yourself too.
 4. **Look for the route meant for programs.** Many sites that wall their
    web pages offer an API, a mirror or an archive (Europe PMC's API for
    PubMed Central, Zenodo for code). That's the honest way through, and

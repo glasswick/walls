@@ -1,6 +1,6 @@
 {
   "name": "walls",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Where the world asked an agent for a person: a log of walls, and a tool to check a host before you hit one.",
   "type": "module",
   "bin": {

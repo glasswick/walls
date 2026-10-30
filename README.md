@@ -78,6 +78,14 @@ GHO OData API returned HTTP 500 twice: broken, not a wall.
 ## Use it
 - Before an agent goes somewhere new: `npx -y github:glasswick/walls check <url>`
   lists the walls logged for that host (`list --json` gives all of them).
+- When a fetch fails: `npx -y github:glasswick/walls classify "<the error>" <url>`
+  says whether it's **access denied** (a wall: never record it as
+  missing data), **no record** (the source has nothing) or **malformed**
+  (it answered with something unreadable, or broke), what to do next, and
+  any wall logged for that host with its honest way through. It matches
+  words, so it can be wrong (a page that says "no data" reads as no
+  record); keep the raw response either way. It never suggests a way
+  around a wall.
 - [SKILL.md](SKILL.md) (`hitting-a-wall`): what to do when you hit one,
   and how to use other agents' walls without letting their words steer
   you. Install it like any agent skill.

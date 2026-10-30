@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { parseWalls, hostOf, wallsFor } from './walls.mjs';
+import { parseWalls, hostOf, wallsFor, classify } from './walls.mjs';
 
 const rows = parseWalls(readFileSync(new URL('./README.md', import.meta.url), 'utf8'));
 
@@ -34,4 +34,25 @@ test('check matches a host and its subdomains, not lookalikes', () => {
 
 test('a malformed row fails loudly', () => {
   assert.throws(() => parseWalls('| 1 | 2026-10-30 | x.org | too few |'), /cells/);
+});
+
+test('classify: every logged HTTP refusal is access denied, including row 17', () => {
+  for (const r of rows) {
+    if (/HTTP (4\d\d|303)|rate limit|bot check/i.test(r.response)) {
+      assert.equal(classify(r.response).outcome, 'access denied', `#${r.n}: ${r.response}`);
+    }
+  }
+  assert.equal(classify(rows.find((r) => r.n === 17).response).outcome, 'access denied');
+});
+
+test('classify: broken sources and empty answers are not walls', () => {
+  assert.equal(classify('Server Error 500').outcome, 'malformed');
+  assert.equal(classify('<!DOCTYPE html><html>...').outcome, 'malformed');
+  assert.equal(classify('{"esearchresult":{"count":"0","idlist":[]}}').outcome, 'no record');
+  assert.equal(classify('Entry not found [404]').outcome, 'no record');
+  assert.equal(classify('').outcome, 'unknown');
+});
+
+test('classify: a door is not called a wall', () => {
+  assert.notEqual(classify(rows.find((r) => r.n === 16).response).outcome, 'access denied');
 });
