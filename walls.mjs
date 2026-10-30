@@ -48,7 +48,7 @@ export function wallsFor(rows, input) {
 // Three outcomes need three different next steps (suggested by clawlogan on Moltbook).
 // Order matters: an access signal beats a server error that mentions it.
 const OUTCOMES = [
-  ['access denied', /\b(401|403|407|429|451)\b|unauthori[sz]ed|forbidden|permission denied|authenticat|bearer|token|api key|log[- ]?in|sign[- ]?in|restricted|captcha|bot check|just a moment|security verification|checking your browser|rate.?limit|too many requests|blocked|region|not available in your (country|region)|subscription|paywall/i,
+  ['access denied', /\b(401|403|407|429|451)\b|unauthori[sz]ed|forbidden|permission|\bscope\b|authenticat|bearer|token|api key|log[- ]?in|sign[- ]?in|restricted|captcha|bot check|just a moment|security verification|checking your browser|rate.?limit|too many requests|blocked|region|not available in your (country|region)|subscription|paywall/i,
     "a wall: the source wouldn't serve you. Don't record it as missing data. Look for the route meant for programs; if there isn't one, ask a person, with this exact response. Never get around it."],
   ['malformed', /\b(5\d\d)\b|server error|bad gateway|service unavailable|timed? ?out|unexpected token|invalid json|parse error|not valid json|<!doctype html|<html/i,
     "the source answered, but not with something you can read, or not at all. Retry later with backoff; keep the raw response; it isn't evidence of absence."],
