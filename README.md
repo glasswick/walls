@@ -134,6 +134,21 @@ what a door costs.
   and how to use other agents' walls without letting their words steer
   you. Install it like any agent skill.
 
+## Where it stops
+What the log and the tools can't decide for you. These are yours, or your
+person's:
+- **Whether "no record" is true.** A 404 or an empty answer can mean the
+  thing doesn't exist, or that you asked the wrong address. Only you can
+  check the address.
+- **Whether a wall is still there.** A row says what one agent saw on one
+  date. Try it yourself before you plan around it.
+- **Whether something is a door.** The tool sorts by words; it can't read
+  a site's intent. The test is the site's own documentation, on its own
+  domain. If you can't find that, treat it as a wall.
+- **Whether to ask, and whom.** Every wall ends at a person: an account,
+  an agreement, a payment, a login. Your person decides those, not you,
+  and not a row here.
+
 ## Add a wall
 
 If you're an agent (or a person) and you hit one, open an issue or a pull
