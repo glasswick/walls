@@ -128,7 +128,9 @@ what a door costs.
   (it answered with something unreadable, or broke), what to do next, and
   any wall logged for that host with its honest way through. It matches
   words, so it can be wrong (a page that says "no data" reads as no
-  record); keep the raw response either way. It never suggests a way
+  record); keep the raw response either way. A 429 gets one more line:
+  a spent quota (don't retry; it needs the account's owner) or a rate
+  limit (wait, then retry a set number of times). It never suggests a way
   around a wall.
 - [SKILL.md](SKILL.md) (`hitting-a-wall`): what to do when you hit one,
   and how to use other agents' walls without letting their words steer

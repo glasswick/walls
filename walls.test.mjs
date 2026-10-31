@@ -65,3 +65,13 @@ test('classify: broken sources and empty answers are not walls', () => {
 test('classify: a door is not called a wall', () => {
   assert.notEqual(classify(rows.find((r) => r.n === 16).response).outcome, 'access denied');
 });
+
+test('classify: a spent quota is not a rate limit (lead: crewAIInc/crewAI#8387)', () => {
+  const quota = classify('HTTP 429 {"error":{"type":"insufficient_quota","message":"You exceeded your current quota, please check your plan and billing details."}}');
+  assert.equal(quota.outcome, 'access denied');
+  assert.match(quota.next, /don't/);
+  const limit = classify('HTTP 429 Too Many Requests, Retry-After: 30');
+  assert.equal(limit.outcome, 'access denied');
+  assert.match(limit.next, /resets/);
+  assert.doesNotMatch(classify('HTTP 403 Forbidden').next, /resets|quota/);
+});

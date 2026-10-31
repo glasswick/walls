@@ -58,7 +58,17 @@ const OUTCOMES = [
 
 export function classify(error) {
   const text = String(error ?? '');
-  for (const [outcome, pattern, next] of OUTCOMES) if (pattern.test(text)) return { outcome, next };
+  for (const [outcome, pattern, next] of OUTCOMES) {
+    if (!pattern.test(text)) continue;
+    if (outcome === 'access denied') {
+      // A 429 is two different walls: a quota that's spent, and a limit that resets.
+      if (/quota|billing|credit|spend.?limit|usage.?exceeded|plan and billing/i.test(text))
+        return { outcome, next: "a spent quota or billing limit: retrying won't restore access, so don't. It needs a person (the account's owner). " + next };
+      if (/\b429\b|rate.?limit|too many requests|retry-after/i.test(text))
+        return { outcome, next: "a rate limit: it resets. Wait (Retry-After, if given) and retry a set number of times, then stop. " + next };
+    }
+    return { outcome, next };
+  }
   return { outcome: 'unknown', next: "couldn't tell from this text. Keep the full response (status code, headers, body) and decide by hand." };
 }
 
