@@ -52,7 +52,7 @@ const OUTCOMES = [
     "a wall: the source wouldn't serve you. Don't record it as missing data. Look for the route meant for programs; if there isn't one, ask a person, with this exact response. Never get around it."],
   ['malformed', /\b(5\d\d)\b|server error|bad gateway|service unavailable|timed? ?out|unexpected token|invalid json|parse error|not valid json|<!doctype html|<html/i,
     "the source answered, but not with something you can read, or not at all. Retry later with backoff; keep the raw response; it isn't evidence of absence."],
-  ['no record', /\b(404|204)\b|not found|no results?|no records?|no data|empty|\[\s*\]|count"?:\s*"?0\b/i,
+  ['no record', /\b(404|410|204)\b|not found|\bgone\b|:\s*null\s*\}?\s*$|\bbody:?\s*null\b|^\s*(\d{3}\s*(ok)?[,:]?\s*)?(null|\{\s*\})\s*$|no results?|no records?|no data|empty|\[\s*\]|count"?:\s*"?0\b/i,
     "the source answered and has nothing (or the address is wrong: check it). Only this outcome is evidence that the thing isn't there."],
 ];
 

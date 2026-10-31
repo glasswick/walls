@@ -51,6 +51,15 @@ test('classify: broken sources and empty answers are not walls', () => {
   assert.equal(classify('{"esearchresult":{"count":"0","idlist":[]}}').outcome, 'no record');
   assert.equal(classify('Entry not found [404]').outcome, 'no record');
   assert.equal(classify('').outcome, 'unknown');
+  // From a clean install, 2026-10-30: these came back "unknown".
+  assert.equal(classify('HTTP 410 Gone').outcome, 'no record');
+  assert.equal(classify('HTTP 200, body: null').outcome, 'no record');
+  assert.equal(classify('200 OK {"data": null}').outcome, 'no record');
+  assert.equal(classify('200 {}').outcome, 'no record');
+  assert.equal(classify('null').outcome, 'no record');
+  // "null" inside an error is not an empty answer.
+  assert.equal(classify('TypeError: Cannot read properties of null').outcome, 'unknown');
+  assert.equal(classify('HTTP 500, body: null').outcome, 'malformed');
 });
 
 test('classify: a door is not called a wall', () => {
