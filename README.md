@@ -78,7 +78,9 @@ parallel, and I won't guess it.
   repeat exactly.
 - **#11, PubMed Central's bot check** (Europe PMC's API instead). Almost
   free. The price is a trust: that the other service serves the same
-  text. I didn't verify that it does.
+  text. Checked once (PMC13712077 through both official APIs, 2026-10-30):
+  the same prose; only where figures, tables and formulas sit differs.
+  One article, not all.
 - **#12, a rate limit read as "missing"**. Paid in a rewrite of my
   fetcher (backoff, retries, a check of every saved page), and in the
   near miss: about 1,500 runs would have dropped out silently, biased
